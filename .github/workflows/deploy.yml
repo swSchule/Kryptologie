@@ -4,9 +4,15 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# Cancel previous workflow runs when new ones are triggered
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -15,15 +21,18 @@ jobs:
           python-version: '3.11'
 
       - name: Install JupyterLite
+        timeout-minutes: 10
         run: |
           pip install jupyterlite jupyterlite-pyodide-kernel
 
       - name: Build JupyterLite site
+        timeout-minutes: 15
         run: |
           jupyter lite build --contents worksheets --output-dir _site
           touch _site/.nojekyll
 
       - name: Deploy to GitHub Pages
+        timeout-minutes: 10
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
