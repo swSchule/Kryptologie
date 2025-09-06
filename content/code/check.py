@@ -364,7 +364,7 @@ def caesar_wheel_widget():
         return ''.join(svg)
 
     def update_wheel(shift):
-        display(HTML(caesar_wheel_svg(shift)))
+        return HTML(caesar_wheel_svg(shift))
 
     slider = widgets.IntSlider(value=0, min=0, max=25, step=1, description='Drehung:')
     widgets.interact(update_wheel, shift=slider)
