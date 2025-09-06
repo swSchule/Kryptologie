@@ -1,32 +1,53 @@
 name: build-jupyterlite
+
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   workflow_dispatch:
+
+permissions:
+  contents: write   # nötig fürs Deploy auf gh-pages
+
+concurrency:
+  group: jupyterlite-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Show repo tree (debug)
+        run: |
+          pwd
+          ls -la
+          echo "---- worksheets/ ----"
+          ls -la worksheets || true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Install JupyterLite
         run: |
-          pip install jupyterlite jupyterlite-pyodide-kernel
+          python -m pip install -U pip
+          pip install "jupyterlite==0.2.5" "jupyterlite-pyodide-kernel==0.2.5"
 
-      - name: Build JupyterLite site
+      # Falls deine Notebooks NICHT in worksheets liegen, ändere den Pfad unten!
+      - name: Build JupyterLite site (from worksheets)
         run: |
-          jupyter lite build --contents worksheets --output-dir _site
+          test -d worksheets || (echo "Ordner 'worksheets' nicht gefunden!" && exit 2)
+          jupyter lite build --contents worksheets --output-dir _site --debug
           touch _site/.nojekyll
+          echo "Build fertig. Inhalt von _site/:"
+          ls -la _site
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: _site
-
-          
