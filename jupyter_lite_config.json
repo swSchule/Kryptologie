@@ -1,6 +1,12 @@
 {
   "LiteBuildConfig": {
     "contents": ["worksheets"],
-    "output_dir": "_site"
+    "output_dir": "_site",
+    "pyodide": {
+      "packages": ["ipywidgets"]
+    },
+    "federated_extensions": [
+      "@jupyter-widgets/jupyterlab-manager"
+    ]
   }
 }
