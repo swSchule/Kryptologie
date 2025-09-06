@@ -1,0 +1,6 @@
+{
+  "LiteBuildConfig": {
+    "contents": ["worksheets"],
+    "output_dir": "_site"
+  }
+}
