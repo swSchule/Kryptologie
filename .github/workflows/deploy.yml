@@ -25,8 +25,7 @@ jobs:
           jupyter lite build \
             --contents worksheets \
             --output-dir _site \
-            --log-level DEBUG \
-            --no-service-worker
+            --log-level DEBUG 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
