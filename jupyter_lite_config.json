@@ -6,7 +6,5 @@
     "indexUrl": "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/",
     "packages": ["ipywidgets"]
   },
-  "federated_extensions": [
-    "@jupyter-widgets/jupyterlab-manager"
-  ]
+  "federated_extensions": ["@jupyter-widgets/jupyterlab-manager"]
 }
